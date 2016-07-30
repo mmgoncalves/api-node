@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 // database
-var mongoDb = mongoose.connect('mongodb://192.168.99.100/ecommerce').connection;
+var mongoDb = mongoose.connect('mongodb://localhost/ecommerce').connection;
 
 mongoDb.on('connected', function(){
     console.log('MongoDB is connected');
