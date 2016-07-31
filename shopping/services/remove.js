@@ -1,46 +1,49 @@
-var Products = require('./../entily/products');
+var Shopping = require('./../entity/shopping');
 
-var Service = function(req, res, netx){
-    var findById = Products.findById(req.params.id).exec();
-    var remove = Products.remove({
+var Service = function(req, res, next){
+    var find = Shopping.findById(req.params.id).exec();
+    var remove = Shopping.update({
         _id: req.params.id
+    }, {
+        $pull: {
+            products: req.params.productId
+        }
     });
 
-    findById
-        .then(function (product) {
-            if(!product){
+    find
+        .then(function(shopping){
+            if(!shopping){
                 return res.status(404)
                     .json({
                         status: false,
-                        data: { _id: req.params._id}
+                        data: {}
                     });
             }
 
             remove
                 .exec()
-                .then(function () {
+                .then(function(product){
                     return res.status(200)
                         .json({
                             status: true,
                             data: product
                         });
                 })
-                .catch(function (err) {
+                .catch(function(err){
                     return res.status(500)
                         .json({
                             status: false,
                             data: {error: err}
                         });
                 });
-
         })
-        .catch(function (err) {
+        .catch(function(err){
             return res.status(500)
                 .json({
                     status: false,
                     data: {error: err}
                 });
-        })
+        });
 };
 
 module.exports = Service;
